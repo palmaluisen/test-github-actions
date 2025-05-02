@@ -1,23 +1,33 @@
 name: mlops-example-tensorflow-regression
+
 on: [push]
+
 jobs:
   run:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
       - name: Train model
         env:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}      
+          CML_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # ✅ Token que CML necesita
         run: |
-          # Your ML workflow goes here
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          python model.py
-      - name: install CML
-        run: |
-          npm install -g @dvcorg/cml
 
+          # Ejecuta el modelo
+          python model.py
+
+          # Crea reporte
           echo "## Model metrics" > report.md
           cat metrics.txt >> report.md
 
+          # Instala CML y publica comentario
+          npm install -g @dvcorg/cml
           cml comment create report.md
