@@ -14,20 +14,27 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Train model
-        env:
-          CML_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # ✅ Token que CML necesita
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-          # Ejecuta el modelo
+      - name: Run model training
+        run: |
           python model.py
 
-          # Crea reporte
+      - name: Install CML
+        run: npm install -g @dvcorg/cml
+
+      - name: Create CML report
+        env:
+          CML_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
           echo "## Model metrics" > report.md
           cat metrics.txt >> report.md
 
-          # Instala CML y publica comentario
-          npm install -g @dvcorg/cml
+          echo "\n## Model Performance" >> report.md
+          echo "Model performance metrics are on the plot below." >> report.md
+          cml publish model_results.png --md >> report.md
+
           cml comment create report.md
