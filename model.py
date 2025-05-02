@@ -85,6 +85,8 @@ model.compile(loss = tf.keras.losses.mae,
               metrics = ['mae'])
 
 # Fit the model
+X_train = X_train.reshape(-1, 1)
+X_test = X_test.reshape(-1, 1)
 model.fit(X_train, y_train, epochs=100)
 
 
