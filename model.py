@@ -47,6 +47,6 @@ mse_val = mean_squared_error(y_test, y_preds)
 print(f'\nMean Absolute Error = {mae_val:.2f}, Mean Squared Error = {mse_val:.2f}.')
 
 # Optional: write metrics to file
-# with open('metrics.txt', 'w') as f:
-#     f.write(f'MAE: {mae_val}, MSE: {mse_val}\n')
+with open('metrics.txt', 'w') as f:
+    f.write(f'MAE: {mae_val}, MSE: {mse_val}\n')
 
